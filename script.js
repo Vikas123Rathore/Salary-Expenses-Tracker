@@ -1,215 +1,55 @@
-// let expenses = JSON.parse(localStorage.getItem('expenses')) || []
-// let totalSalary = 0
-// // Form select
-// const salaryForm = document.getElementById('salaryForm')
-
-// // Input select
-// const salaryInput = document.getElementById('salaryAmount')
-
-// // // Total salary
-// const totalSalary = document.getElementById('totalSalary')
-// // Get salary from localStorage
-// const savedSalary = localStorage.getItem('salary')
-
-// // Check
-// if (savedSalary) {
-//   totalSalary.innerText = savedSalary
-// }
-// // Form submit event
-// salaryForm.addEventListener('submit', function (event) {
-//   // Page refresh stop
-//   event.preventDefault()
-
-//   // Input value
-//   const salaryValue = salaryInput.value.trim()
-
-//   // Empty check
-//   if (salaryValue === '') {
-//     alert('Please enter salary')
-//     return
-//   }
-
-//   // Salary show
-//   totalSalary.innerText = salaryValue
-
-//   localStorage.setItem('salary', salaryValue)
-
-//   salaryInput.value = ''
-// })
-
-// // Expense form select
-// const expenseForm = document.getElementById('salaryExpenses')
-
-// // Expense name input
-// const expenseNameInput = document.getElementById('expensesName')
-
-// // Expense amount input
-// const expenseAmountInput = document.getElementById('expenseAmount')
-
-// // UL
-// const expenseList = document.getElementById('expenseList')
-
-// // Render function
-// function renderExpenses() {
-//   // Old UI clear
-//   expenseList.innerHTML = ''
-
-//   // Loop through array
-//   expenses.forEach(function (expense, index) {
-//     // Create li
-//     const li = document.createElement('li')
-
-//     // Styling
-//     li.className =
-//       'bg-gray-500 text-white px-4 py-2 rounded-md mb-2 flex justify-between items-center hover:bg-gray-700 transition duration-200'
-
-//     // Expense text
-//     li.innerText = `${expense.name}: $${expense.amount}`
-
-//     // Delete button
-//     const deleteBtn = document.createElement('button')
-
-//     deleteBtn.innerText = 'Delete'
-
-//     deleteBtn.className = 'bg-red-500 px-3 py-1 rounded cursor-pointer'
-
-//     // Delete event
-//     deleteBtn.addEventListener('click', function () {
-//       // Remove from array
-//       expenses.splice(index, 1)
-
-//       // Update localStorage
-//       localStorage.setItem('expenses', JSON.stringify(expenses))
-
-//       // Re-render UI
-//       renderExpenses()
-//     })
-
-//     // Add delete button into li
-//     li.appendChild(deleteBtn)
-
-//     // Add li into ul
-//     expenseList.appendChild(li)
-//   })
-// }
-
-// // Form submit
-// expenseForm.addEventListener('submit', (event) => {
-//   // Stop refresh
-//   event.preventDefault()
-
-//   // Input values
-//   const expenseName = expenseNameInput.value.trim()
-
-//   const expenseAmount = expenseAmountInput.value.trim()
-
-//   // Empty check
-//   if (expenseName === '' || expenseAmount === '') {
-//     alert('Please enter expense name and amount')
-
-//     return
-//   }
-
-//   // Add expense into array
-//   expenses.push({
-//     name: expenseName,
-//     amount: expenseAmount,
-//   })
-
-//   // Save into localStorage
-//   localStorage.setItem('expenses', JSON.stringify(expenses))
-
-//   // Render UI
-//   renderExpenses()
-
-//   // Clear inputs
-//   expenseNameInput.value = ''
-
-//   expenseAmountInput.value = ''
-// })
-
-// // Initial render on page load
-// renderExpenses()
-
-// const ctx = document.getElementById('myChart')
-
-// new Chart(ctx, {
-//   type: 'doughnut',
-
-//   data: {
-//     labels: ['Salary', 'Expenses', 'Remaining'],
-
-//     datasets: [
-//       {
-//         label: 'Expenses',
-
-//         data: [5000, 12000, 3000],
-
-//         borderWidth: 1,
-//       },
-//     ],
-//   },
-
-//   options: {
-//     responsive: true,
-//   },
-// })
-// =======================
-// LOCAL STORAGE
-// =======================
-
 let expenses = JSON.parse(localStorage.getItem('expenses')) || []
 
 let salary = Number(localStorage.getItem('salary')) || 0
 
-// =======================
-// SELECT ELEMENTS
-// =======================
+let currentCurrency = 'INR'
+let exchangeRate = 1
+
+// ELEMENTS
 
 const salaryForm = document.getElementById('salaryForm')
-
 const salaryInput = document.getElementById('salaryAmount')
 
 const totalSalaryEl = document.getElementById('totalSalary')
-
 const totalExpensesEl = document.getElementById('totalExpenses')
-
 const remainingBalanceEl = document.getElementById('remainingBalance')
 
 const expenseForm = document.getElementById('salaryExpenses')
-
 const expenseNameInput = document.getElementById('expensesName')
-
 const expenseAmountInput = document.getElementById('expenseAmount')
 
 const expenseList = document.getElementById('expenseList')
 
-// =======================
-// CHART
-// =======================
+const currencySelect = document.getElementById('currencySelect')
+
+const downloadPdfBtn = document.getElementById('downloadPdf')
 
 const ctx = document.getElementById('myChart')
+
+const salaryError = document.getElementById('salaryError')
+
+const expenseError = document.getElementById('expenseError')
+
+// CHART
 
 let expenseChart
 
 function updateChart(totalExpenses, remainingBalance) {
-  // Destroy old chart
   if (expenseChart) {
     expenseChart.destroy()
   }
 
-  // Create new chart
   expenseChart = new Chart(ctx, {
     type: 'doughnut',
 
     data: {
-      labels: ['Expenses', 'Remaining'],
+      labels: ['Expenses', 'Remaining Balance'],
 
       datasets: [
         {
-          label: 'Finance',
-
           data: [totalExpenses, remainingBalance],
+
+          backgroundColor: ['#ef4444', '#22c55e'],
 
           borderWidth: 1,
         },
@@ -218,168 +58,237 @@ function updateChart(totalExpenses, remainingBalance) {
 
     options: {
       responsive: true,
+      maintainAspectRatio: false,
     },
   })
 }
 
-// =======================
-// UPDATE SUMMARY
-// =======================
+// SUMMARY
 
 function updateSummary() {
-  // Total Expenses
-  const totalExpenses = expenses.reduce(function (total, expense) {
+  const totalExpenses = expenses.reduce((total, expense) => {
     return total + Number(expense.amount)
   }, 0)
 
-  // Remaining Balance
   const remainingBalance = salary - totalExpenses
 
-  // Update DOM
-  totalSalaryEl.innerText = `₹${salary}`
+  const convertedSalary = salary * exchangeRate
 
-  totalExpensesEl.innerText = `₹${totalExpenses}`
+  const convertedExpenses = totalExpenses * exchangeRate
 
-  remainingBalanceEl.innerText = `₹${remainingBalance}`
+  const convertedBalance = remainingBalance * exchangeRate
 
-  // Warning Logic
+  totalSalaryEl.innerText = `${currentCurrency} ${convertedSalary.toFixed(2)}`
+
+  totalExpensesEl.innerText = `${currentCurrency} ${convertedExpenses.toFixed(2)}`
+
+  remainingBalanceEl.innerText = `${currentCurrency} ${convertedBalance.toFixed(2)}`
+
+  // Threshold Alert
+
   if (salary > 0 && remainingBalance < salary * 0.1) {
     remainingBalanceEl.classList.add('text-red-500')
   } else {
     remainingBalanceEl.classList.remove('text-red-500')
   }
 
-  // Update Chart
-  updateChart(totalExpenses, remainingBalance)
+  updateChart(convertedExpenses, convertedBalance)
 }
 
-// =======================
-// SALARY FORM
-// =======================
-
-if (salary > 0) {
-  totalSalaryEl.innerText = `₹${salary}`
-}
-
-salaryForm.addEventListener('submit', function (event) {
-  event.preventDefault()
-
-  const salaryValue = Number(salaryInput.value.trim())
-
-  // Validation
-  if (salaryValue <= 0) {
-    alert('Please enter valid salary')
-
-    return
-  }
-
-  // Save salary
-  salary = salaryValue
-
-  localStorage.setItem('salary', salary)
-
-  // Update UI
-  updateSummary()
-
-  // Clear input
-  salaryInput.value = ''
-})
-
-// =======================
 // RENDER EXPENSES
-// =======================
 
 function renderExpenses() {
-  // Clear old list
   expenseList.innerHTML = ''
 
-  // Loop
-  expenses.forEach(function (expense, index) {
-    // Create li
+  expenses.forEach((expense, index) => {
     const li = document.createElement('li')
 
-    // Styling
     li.className =
-      'bg-gray-500 text-white px-4 py-2 rounded-md mb-2 flex justify-between items-center hover:bg-gray-700 transition duration-200'
+      'bg-gray-500 text-white px-4 py-2 rounded-md mb-2 flex justify-between items-center'
 
-    // Create text
-    const expenseText = document.createElement('span')
+    const text = document.createElement('span')
 
-    expenseText.innerText = `${expense.name}: ₹${expense.amount}`
+    text.innerText = `${expense.name}: ${currentCurrency} ${(expense.amount * exchangeRate).toFixed(2)}`
 
-    // Delete button
     const deleteBtn = document.createElement('button')
 
     deleteBtn.innerText = 'Delete'
 
     deleteBtn.className = 'bg-red-500 px-3 py-1 rounded cursor-pointer'
 
-    // Delete event
-    deleteBtn.addEventListener('click', function () {
-      // Remove expense
+    deleteBtn.addEventListener('click', () => {
       expenses.splice(index, 1)
 
-      // Save updated array
       localStorage.setItem('expenses', JSON.stringify(expenses))
 
-      // Re-render
       renderExpenses()
 
       updateSummary()
     })
 
-    // Append
-    li.appendChild(expenseText)
+    li.appendChild(text)
 
     li.appendChild(deleteBtn)
 
     expenseList.appendChild(li)
   })
-
-  // Update calculations
-  updateSummary()
 }
 
-// =======================
-// EXPENSE FORM
-// =======================
+// SALARY FORM
 
-expenseForm.addEventListener('submit', function (event) {
-  event.preventDefault()
+salaryForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const salaryValue = Number(salaryInput.value)
+
+  salaryError.innerText = ''
+
+  if (salaryInput.value.trim() === '') {
+    salaryError.innerText = 'Salary is required'
+    return
+  }
+
+  if (salaryValue <= 0) {
+    salaryError.innerText = 'Salary must be greater than 0'
+    return
+  }
+
+  salary = salaryValue
+
+  localStorage.setItem('salary', salary)
+  salaryError.innerText = ''
+  salaryInput.value = ''
+
+  updateSummary()
+})
+
+// expense form
+
+expenseForm.addEventListener('submit', (e) => {
+  e.preventDefault()
 
   const expenseName = expenseNameInput.value.trim()
 
-  const expenseAmount = Number(expenseAmountInput.value.trim())
+  const expenseAmount = Number(expenseAmountInput.value)
 
-  // Validation
-  if (expenseName === '' || expenseAmount <= 0) {
-    alert('Please enter valid data')
+  expenseError.innerText = ''
+
+  if (expenseName === '') {
+    expenseError.innerText = 'Expense name is required'
+    return
+  }
+
+  if (expenseAmountInput.value.trim() === '') {
+    expenseError.innerText = 'Expense amount is required'
+    return
+  }
+
+  if (expenseAmount <= 0) {
+    expenseError.innerText = 'Amount must be greater than 0'
+    return
+  }
+
+  expenses.push({
+    name: expenseName,
+    amount: expenseAmount,
+  })
+
+  localStorage.setItem('expenses', JSON.stringify(expenses))
+  expenseError.innerText = ''
+  expenseNameInput.value = ''
+
+  expenseAmountInput.value = ''
+
+  renderExpenses()
+
+  updateSummary()
+})
+
+// PDF DOWNLOAD
+
+downloadPdfBtn.addEventListener('click', generatePDF)
+
+function generatePDF() {
+  const { jsPDF } = window.jspdf
+
+  const doc = new jsPDF()
+
+  const totalExpenses = expenses.reduce((total, expense) => {
+    return total + Number(expense.amount)
+  }, 0)
+
+  const remainingBalance = salary - totalExpenses
+
+  doc.setFontSize(20)
+
+  doc.text('Cash Flow Report', 20, 20)
+
+  doc.setFontSize(12)
+
+  doc.text(`Salary: ₹${salary}`, 20, 40)
+
+  doc.text(`Total Expenses: ₹${totalExpenses}`, 20, 50)
+
+  doc.text(`Remaining Balance: ₹${remainingBalance}`, 20, 60)
+
+  doc.setFontSize(16)
+
+  doc.text('Expense List', 20, 80)
+
+  let y = 95
+
+  expenses.forEach((expense, index) => {
+    doc.text(`${index + 1}. ${expense.name} - ₹${expense.amount}`, 20, y)
+
+    y += 10
+  })
+
+  if (expenses.length === 0) {
+    doc.text('No expenses found', 20, y)
+  }
+
+  doc.save('CashFlowReport.pdf')
+}
+
+// CURRENCY CONVERTER
+
+async function fetchCurrency(currency) {
+  if (currency === 'INR') {
+    currentCurrency = 'INR'
+
+    exchangeRate = 1
+
+    renderExpenses()
+
+    updateSummary()
 
     return
   }
 
-  // Push expense
-  expenses.push({
-    name: expenseName,
+  try {
+    const response = await fetch(
+      'https://v6.exchangerate-api.com/v6/41f8746b1f5ee206f63d475d/latest/INR',
+    )
 
-    amount: expenseAmount,
-  })
+    const data = await response.json()
 
-  // Save
-  localStorage.setItem('expenses', JSON.stringify(expenses))
+    exchangeRate = data.conversion_rates[currency]
 
-  // Render
-  renderExpenses()
+    currentCurrency = currency
 
-  // Clear inputs
-  expenseNameInput.value = ''
+    renderExpenses()
 
-  expenseAmountInput.value = ''
+    updateSummary()
+  } catch (error) {
+    console.log(error)
+
+    alert('Currency conversion failed')
+  }
+}
+
+currencySelect.addEventListener('change', function () {
+  fetchCurrency(this.value)
 })
-
-// =======================
-// INITIAL LOAD
-// =======================
 
 renderExpenses()
 

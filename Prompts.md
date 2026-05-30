@@ -1,16 +1,38 @@
 # Cash-Flow Sprint Notes
+# Prompts Used During Development
 
-- Vanilla JavaScript only.
-- Persist salary, expenses, and currency state in localStorage.
-- Calculate remaining balance from `salary - total expenses` on every render.
-- Keep the Chart.js pie chart in sync by destroying the previous instance before re-rendering.
-- Use jsPDF for the report export.
-- Track the currency display separately from the stored base values.
+## Development Note
 
-QA checklist:
+This project was primarily designed and developed by me.
 
-1. Enter salary, add expenses, and verify the totals update immediately.
-2. Refresh the page and confirm the values load back from localStorage.
-3. Delete an expense and confirm the balance and chart update instantly.
-4. Switch currency and confirm the display converts.
-5. Download the PDF report and confirm the summary and item list are included.
+### Self-Implemented Features
+- Complete UI/UX design using HTML and Tailwind CSS
+- Responsive layout
+- Salary and Expense Forms
+- Expense List Rendering
+- DOM Manipulation
+- LocalStorage Integration
+- Delete Expense Functionality
+- Remaining Balance Calculation
+- Project Structure and Styling
+
+### AI Assistance Used
+I used AI assistance only for understanding and implementing a few advanced JavaScript concepts:
+
+- Chart.js Doughnut Chart integration
+- Currency Converter API integration
+- jsPDF report generation
+- Debugging some JavaScript errors and logic issues
+
+All code was reviewed, understood, modified, and integrated by me into the project.
+
+### Learning Outcome
+Through this project, I gained hands-on experience with:
+- DOM Manipulation
+- Event Handling
+- LocalStorage
+- Array Methods (forEach, reduce, splice)
+- Chart.js
+- API Integration
+- jsPDF
+- State Management using Vanilla JavaScript
