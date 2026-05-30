@@ -1,3 +1,174 @@
+let expenses = JSON.parse(localStorage.getItem('expenses')) || []
+let totalSalary = 0
+// Form select
+const salaryForm = document.getElementById('salaryForm')
+
+// Input select
+const salaryInput = document.getElementById('salaryAmount')
+
+// // Total salary
+// const totalSalary = document.getElementById('totalSalary')
+// Get salary from localStorage
+const savedSalary = localStorage.getItem('salary')
+
+// Check
+if (savedSalary) {
+  totalSalary.innerText = savedSalary
+}
+// Form submit event
+salaryForm.addEventListener('submit', function (event) {
+  // Page refresh stop
+  event.preventDefault()
+
+  // Input value
+  const salaryValue = salaryInput.value.trim()
+
+  // Empty check
+  if (salaryValue === '') {
+    alert('Please enter salary')
+    return
+  }
+
+  // Salary show
+  totalSalary.innerText = salaryValue
+
+  localStorage.setItem('salary', salaryValue)
+
+  salaryInput.value = ''
+})
+
+// Expense form select
+const expenseForm = document.getElementById('salaryExpenses')
+
+// Expense name input
+const expenseNameInput = document.getElementById('expensesName')
+
+// Expense amount input
+const expenseAmountInput = document.getElementById('expenseAmount')
+
+// UL
+const expenseList = document.getElementById('expenseList')
+
+// Render function
+function renderExpenses() {
+  // Old UI clear
+  expenseList.innerHTML = ''
+
+  // Loop through array
+  expenses.forEach(function (expense, index) {
+    // Create li
+    const li = document.createElement('li')
+
+    // Styling
+    li.className =
+      'bg-gray-500 text-white px-4 py-2 rounded-md mb-2 flex justify-between items-center hover:bg-gray-700 transition duration-200'
+
+    // Expense text
+    li.innerText = `${expense.name}: $${expense.amount}`
+
+    // Delete button
+    const deleteBtn = document.createElement('button')
+
+    deleteBtn.innerText = 'Delete'
+
+    deleteBtn.className = 'bg-red-500 px-3 py-1 rounded cursor-pointer'
+
+    // Delete event
+    deleteBtn.addEventListener('click', function () {
+      // Remove from array
+      expenses.splice(index, 1)
+
+      // Update localStorage
+      localStorage.setItem('expenses', JSON.stringify(expenses))
+
+      // Re-render UI
+      renderExpenses()
+    })
+
+    // Add delete button into li
+    li.appendChild(deleteBtn)
+
+    // Add li into ul
+    expenseList.appendChild(li)
+  })
+}
+
+// Form submit
+expenseForm.addEventListener('submit', (event) => {
+  // Stop refresh
+  event.preventDefault()
+
+  // Input values
+  const expenseName = expenseNameInput.value.trim()
+
+  const expenseAmount = expenseAmountInput.value.trim()
+
+  // Empty check
+  if (expenseName === '' || expenseAmount === '') {
+    alert('Please enter expense name and amount')
+
+    return
+  }
+
+  // Add expense into array
+  expenses.push({
+    name: expenseName,
+    amount: expenseAmount,
+  })
+
+  // Save into localStorage
+  localStorage.setItem('expenses', JSON.stringify(expenses))
+
+  // Render UI
+  renderExpenses()
+
+  // Clear inputs
+  expenseNameInput.value = ''
+
+  expenseAmountInput.value = ''
+})
+
+// Initial render on page load
+renderExpenses()
+
+const ctx = document.getElementById('myChart')
+
+new Chart(ctx, {
+  type: 'doughnut',
+
+  data: {
+    labels: ['Salary', 'Expenses', 'Remaining'],
+
+    datasets: [
+      {
+        label: 'Expenses',
+
+        data: [5000, 12000, 3000],
+
+        borderWidth: 1,
+      },
+    ],
+  },
+
+  options: {
+    responsive: true,
+  },
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -60,7 +231,7 @@
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-500 bg-slate-300 mb-4"
                 placeholder="e.g. Rent, Food, etc.">
               <label for="expenseAmount" class="block text-gray-300 mb-2 uppercase">Expense Amount</label>
-              <input type="number" id="expenseAmount"
+              <input type="number" id="expensesAmount"
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-500 bg-slate-300"
                 placeholder="e.g. 50000, etc.">
             </div>
