@@ -8,7 +8,10 @@
 
   <!-- Tailwind css CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+  <!-- chart cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- for font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-black min-h-screen">
@@ -26,9 +29,10 @@
 
 
         <!-- Add salary  -->
-        <div class="w-full border border-gray-200 bg-gray-900 rounded-2xl px-4 py-2 mb-4 hover:scale-[1.02] transition duration-200">
+        <div
+          class="w-full border border-gray-200 bg-gray-900 rounded-2xl px-4 py-2 mb-4 hover:scale-[1.02] transition duration-200">
           <h2 class="text-xl font-semibold  text-green-300">SET SALARY</h2>
-          <form class="w-full py-2">
+          <form id="salaryForm" class="w-full py-2">
             <div class="mb-4">
               <label for="salaryAmount" class="block text-gray-300 mb-2 ">MONTHLY SALARY</label>
               <input type="number" id="salaryAmount"
@@ -44,16 +48,17 @@
 
 
         <!-- Add Expenses -->
-        <div class="w-full border border-gray-200 bg-gray-900 rounded-2xl px-4 py-2 mb-4 hover:scale-[1.02] transition duration-200">
+        <div
+          class="w-full border border-gray-200 bg-gray-900 rounded-2xl px-4 py-2 mb-4 hover:scale-[1.02] transition duration-200">
           <h2 class="text-xl font-semibold  text-green-300">LOG EXPENSES</h2>
-          <form class="w-full py-4">
+          <form class="w-full py-4" id="salaryExpenses">
             <div class="mb-4">
               <label for="expensesName" class="block text-gray-300 mb-2 uppercase">Expense Name</label>
               <input type="text" id="expensesName"
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-500 bg-slate-300 mb-4"
                 placeholder="e.g. Rent, Food, etc.">
               <label for="expenseAmount" class="block text-gray-300 mb-2 uppercase">Expense Amount</label>
-              <input type="number" id="expenseAmount"
+              <input type="number" id="expensesAmount"
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-500 bg-slate-300"
                 placeholder="e.g. 50000, etc.">
             </div>
@@ -72,12 +77,12 @@
           <div
             class="bg-gray-900 text-slate-300 rounded-2xl border border-slate-400 w-full md:w-[33%] p-4 mb-4 md:mb-0 h-[100px] uppercase hover:scale-[1.02] transition duration-200">
             Total Salary
-           <p id="totalSalary" class="text-2xl font-bold text-blue-400 mt-2">0</p>
+            <p id="totalSalary" class="text-2xl font-bold text-blue-400 mt-2">0</p>
 
           </div>
           <div
             class="bg-gray-900 text-slate-300 rounded-2xl border border-slate-400 w-full md:w-[33%] p-4 mb-4 md:mb-0 h-[100px] uppercase hover:scale-[1.02] transition duration-200">
-           total Expenses
+            total Expenses
             <p id="totalExpenses" class="text-2xl font-bold text-blue-400 mt-2">0</p>
           </div>
           <div
@@ -88,20 +93,22 @@
         </div>
 
         <!-- Expenses record -->
-        <div class="bg-gray-900 text-slate-300 rounded-2xl border border-slate-400 w-full p-4 mt-4 min-h-[200px] hover:scale-[1.02] transition duration-200">
+        <div
+          class="bg-gray-900 text-slate-300 rounded-2xl border border-slate-400 w-full p-4 mt-4 min-h-[200px] hover:scale-[1.02] transition duration-200">
           <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-green-300 mb-2">Expense List</h2>
             <p>
               Live DOM update
             </p>
           </div>
-          <ul class="list-disc list-inside text-gray-400">
+          <ul class="list-none text-gray-400" id="expenseList">
             <!-- Expense items will be dynamically added here -->
 
           </ul>
         </div>
         <!-- expense visualisation -->
-        <div class="bg-gray-900 rounded-2xl border border-slate-400 w-full p-4 mt-4 h-[500px] hover:scale-[1.02] transition duration-200">
+        <div
+          class="bg-gray-900 rounded-2xl border border-slate-400 w-full p-4 mt-4 h-[500px] hover:scale-[1.02] transition duration-200">
           <h2 class="text-white text-2xl font-bold">Expense Visualization</h2>
         </div>
       </div>
@@ -110,5 +117,7 @@
 
   </div>
 </body>
-<script src="script.js"></script>
+<script src="script.js">
+</script>
+
 </html>
